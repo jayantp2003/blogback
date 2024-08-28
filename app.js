@@ -24,9 +24,15 @@ const postsRouter = require('./routes/posts');
 app.use('/posts', postsRouter);
 app.use('/auth', require('./routes/auth'));
 
-mongoose.connect(mongoURI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error(`Failed to connect to MongoDB ${mongoURI}`, err));
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to MongoDB:', mongoURI);
+  })
+  .catch(err => {
+    console.error(`Failed to connect to MongoDB: ${mongoURI}`);
+    console.error('Error details:', err.message);
+    process.exit(1); // Exit the process to avoid running in an undefined state
+  });
 
 app.get('/', (req, res) => {
   res.send('Hello World');
